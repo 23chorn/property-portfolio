@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useVault } from '../../../hooks/useVault.ts'
 import { Card } from '../../shared/Card.tsx'
 import { formatCurrency, toAED, fromAED, formatInDisplayCurrency } from '../../../utils/currency.ts'
 import { calcPersonMonthlySurplus, calcPersonMonthlyOutgoings } from '../../../utils/calculations.ts'
 import { PersonHeader, PersonIncome, PersonExpenses, PersonVariableSpend } from './PersonColumn.tsx'
 import { NumberInput } from '../../shared/NumberInput.tsx'
+import { fetchLiveRates } from '../../../utils/fetchRates.ts'
 import type { Person, SavingsPot, PotContribution, Currency } from '../../../types/vault.ts'
 import type { FxRates } from '../../../utils/currency.ts'
 
@@ -72,12 +74,24 @@ export function FinancesPage() {
   const rates = state.meta.fxRates
   const dc = state.meta.displayCurrency
   const fmt = (aed: number) => formatInDisplayCurrency(aed, dc, rates)
+  const [refreshing, setRefreshing] = useState(false)
 
   const p1 = state.people.person1
   const p2 = state.people.person2
 
   const updatePerson = (key: 'person1' | 'person2') => (person: Person) =>
     dispatch({ type: 'UPDATE_PERSON', payload: { key, person } })
+
+  const refreshRates = async () => {
+    setRefreshing(true)
+    try {
+      const newRates = await fetchLiveRates()
+      dispatch({ type: 'UPDATE_META', payload: { fxRates: newRates } })
+    } catch {
+      // keep existing rates
+    }
+    setRefreshing(false)
+  }
 
   const updateRate = (key: 'AED_GBP' | 'AED_USD', value: string) => {
     dispatch({
@@ -97,14 +111,16 @@ export function FinancesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold font-mono">Finances</h1>
         <div className="flex items-center gap-4 text-sm">
-          <div className="flex items-center gap-1">
-            <label className="text-stone-400 mb-0">AED/GBP:</label>
-            <input type="number" step="0.001" value={Number(state.meta.fxRates.AED_GBP.toFixed(3))} onChange={(e) => updateRate('AED_GBP', e.target.value)} className="w-24 text-sm" />
-          </div>
-          <div className="flex items-center gap-1">
-            <label className="text-stone-400 mb-0">AED/USD:</label>
-            <input type="number" step="0.001" value={Number(state.meta.fxRates.AED_USD.toFixed(3))} onChange={(e) => updateRate('AED_USD', e.target.value)} className="w-24 text-sm" />
-          </div>
+          <span className="text-stone-500 font-mono">1 AED = {rates.AED_GBP.toFixed(4)} GBP</span>
+          <span className="text-stone-500 font-mono">1 AED = {rates.AED_USD.toFixed(4)} USD</span>
+          <button
+            onClick={refreshRates}
+            disabled={refreshing}
+            className="text-amber-400 hover:text-amber-300 disabled:opacity-50 disabled:cursor-wait"
+            title="Refresh FX rates"
+          >
+            {refreshing ? '...' : '↻'}
+          </button>
         </div>
       </div>
 
