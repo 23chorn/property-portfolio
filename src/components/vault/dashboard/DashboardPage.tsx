@@ -9,8 +9,6 @@ import {
   calcGoalProgress,
   calcGoalMonthlyInflow,
   calcMonthsToTarget,
-  calcPropertyMonthlyCashflow,
-  calcPropertyEquity,
   formatDate,
 } from '../../../utils/calculations.ts'
 import { toAED, formatInDisplayCurrency } from '../../../utils/currency.ts'
@@ -28,11 +26,6 @@ export function DashboardPage() {
   const p2Surplus = calcPersonMonthlySurplus(p2)
   const combinedSurplus =
     toAED(p1Surplus, dc, rates) + toAED(p2Surplus, dc, rates)
-
-  const totalPropertyCashflow = state.property.reduce(
-    (sum, p) => sum + toAED(calcPropertyMonthlyCashflow(p), p.currency, rates),
-    0,
-  )
 
   const totalIncome =
     toAED(p1.monthlySalaryNet, dc, rates) +
@@ -56,7 +49,7 @@ export function DashboardPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold font-mono font-mono">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <div className="text-sm text-stone-400 mb-1">Net Worth</div>
           <CurrencyDisplay amount={netWorth} currency="AED" fxRates={rates} displayCurrency={dc} size="lg" />
@@ -79,18 +72,6 @@ export function DashboardPage() {
           </div>
         </Card>
 
-        <Card>
-          <div className="text-sm text-stone-400 mb-1">Property</div>
-          <div className="text-lg font-semibold">
-            {state.property.length} {state.property.length === 1 ? 'property' : 'properties'}
-          </div>
-          <div className="text-sm text-stone-400 font-mono mt-1">
-            Equity: {fmt(state.property.reduce((s, p) => s + toAED(calcPropertyEquity(p), p.currency, rates), 0))}
-          </div>
-          <div className={`text-sm font-mono ${totalPropertyCashflow >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-            Cashflow: {fmt(totalPropertyCashflow)}/mo
-          </div>
-        </Card>
       </div>
 
       {state.goals.length > 0 && (

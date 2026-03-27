@@ -1,8 +1,9 @@
-import { createContext, useReducer, useCallback, useRef, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useReducer, useCallback, useRef, useState, useEffect, useMemo, type ReactNode } from 'react'
 import type { VaultData } from '../types/vault.ts'
 import { vaultReducer, type VaultAction } from './vaultReducer.ts'
 import { createEmptyVault } from '../store/defaults-vault.ts'
 import { loadVaultData, saveVaultData } from '../utils/vaultKv.ts'
+import { useLinkedProperties } from '../hooks/useLinkedProperties.ts'
 
 type SaveStatus = 'saving' | 'saved' | 'local-only' | 'error'
 
@@ -21,6 +22,14 @@ export function VaultProvider({ children }: { children: ReactNode }) {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved')
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const initialLoadDone = useRef(false)
+
+  const { properties: linkedProperties, loading: propsLoading } = useLinkedProperties()
+
+  // Merge linked properties into state so all vault pages see them
+  const stateWithProperties = useMemo(() => ({
+    ...state,
+    property: linkedProperties,
+  }), [state, linkedProperties])
 
   // Load from KV on mount
   useEffect(() => {
@@ -61,7 +70,7 @@ export function VaultProvider({ children }: { children: ReactNode }) {
   }, [state])
 
   return (
-    <VaultContext.Provider value={{ state, dispatch, loading, saveStatus }}>
+    <VaultContext.Provider value={{ state: stateWithProperties, dispatch, loading: loading || propsLoading, saveStatus }}>
       {children}
     </VaultContext.Provider>
   )

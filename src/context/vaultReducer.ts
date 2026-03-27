@@ -1,13 +1,10 @@
-import type { VaultData, Person, Currency } from '../types/vault.ts'
+import type { VaultData, Person, SavingsPot, Goal, NetWorthSnapshot, Currency } from '../types/vault.ts'
 import { convertCurrency, type FxRates } from '../utils/currency.ts'
 
 export type VaultAction =
   | { type: 'SET_VAULT'; payload: VaultData }
   | { type: 'UPDATE_META'; payload: Partial<VaultData['meta']> }
   | { type: 'UPDATE_PERSON'; payload: { key: 'person1' | 'person2'; person: Person } }
-  | { type: 'ADD_PROPERTY'; payload: Property }
-  | { type: 'UPDATE_PROPERTY'; payload: Property }
-  | { type: 'DELETE_PROPERTY'; payload: string }
   | { type: 'ADD_POT'; payload: SavingsPot }
   | { type: 'UPDATE_POT'; payload: SavingsPot }
   | { type: 'DELETE_POT'; payload: string }
@@ -22,7 +19,6 @@ function convertPerson(person: Person, from: Currency, to: Currency, rates: FxRa
   const c = (amount: number) => convertCurrency(amount, from, to, rates)
   return {
     ...person,
-    currency: to,
     monthlySalaryGross: c(person.monthlySalaryGross),
     monthlySalaryNet: c(person.monthlySalaryNet),
     monthlyFixedExpenses: person.monthlyFixedExpenses.map((e) => ({
@@ -80,23 +76,6 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
           ...state.people,
           [action.payload.key]: action.payload.person,
         },
-      }
-
-    case 'ADD_PROPERTY':
-      return { ...state, property: [...state.property, action.payload] }
-
-    case 'UPDATE_PROPERTY':
-      return {
-        ...state,
-        property: state.property.map((p) =>
-          p.id === action.payload.id ? action.payload : p,
-        ),
-      }
-
-    case 'DELETE_PROPERTY':
-      return {
-        ...state,
-        property: state.property.filter((p) => p.id !== action.payload),
       }
 
     case 'ADD_POT':
