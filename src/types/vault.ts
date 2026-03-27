@@ -64,6 +64,13 @@ export interface NetWorthSnapshot {
   netWorthAED: number
 }
 
+export interface FireInputs {
+  annualExpenses: number
+  currentInvestments: number
+  monthlyContribution: number
+  annualReturn: number
+}
+
 export interface VaultData {
   meta: {
     version: string
@@ -82,4 +89,5 @@ export interface VaultData {
   savingsPots: SavingsPot[]
   goals: Goal[]
   netWorthSnapshots: NetWorthSnapshot[]
+  fire: FireInputs
 }

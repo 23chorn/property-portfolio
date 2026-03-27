@@ -1,20 +1,22 @@
-import { useState } from 'react'
 import { Card } from '../../shared/Card.tsx'
 import { NumberInput } from '../../shared/NumberInput.tsx'
-import { formatCurrency } from '../../../utils/currency.ts'
+import { formatCurrency, fromAED, toAED } from '../../../utils/currency.ts'
 import { calcFireNumber, calcYearsToFire } from '../../../utils/calculations.ts'
 import { useVault } from '../../../hooks/useVault.ts'
 
 export function FireCalculator() {
-  const { state } = useVault()
+  const { state, dispatch } = useVault()
   const dc = state.meta.displayCurrency
-  const [annualExpenses, setAnnualExpenses] = useState(0)
-  const [currentInvestments, setCurrentInvestments] = useState(0)
-  const [monthlyContribution, setMonthlyContribution] = useState(0)
-  const [annualReturn, setAnnualReturn] = useState(7)
+  const rates = state.meta.fxRates
+  const fire = state.fire
+  const toDisplay = (aed: number) => fromAED(aed, dc, rates)
+  const toStore = (display: number) => toAED(display, dc, rates)
 
-  const fireNumber = calcFireNumber(annualExpenses)
-  const years = calcYearsToFire(currentInvestments, monthlyContribution, annualReturn, fireNumber)
+  const set = (partial: Partial<typeof fire>) =>
+    dispatch({ type: 'UPDATE_FIRE', payload: partial })
+
+  const fireNumber = calcFireNumber(fire.annualExpenses)
+  const years = calcYearsToFire(fire.currentInvestments, fire.monthlyContribution, fire.annualReturn, fireNumber)
 
   const projectedDate = years !== null
     ? new Date(Date.now() + years * 365.25 * 86400000).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
@@ -26,19 +28,19 @@ export function FireCalculator() {
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label>Annual Expenses ({dc})</label>
-          <NumberInput value={annualExpenses} onChange={setAnnualExpenses} />
+          <NumberInput value={toDisplay(fire.annualExpenses)} onChange={(v) => set({ annualExpenses: toStore(v) })} />
         </div>
         <div>
           <label>Current Investments ({dc})</label>
-          <NumberInput value={currentInvestments} onChange={setCurrentInvestments} />
+          <NumberInput value={toDisplay(fire.currentInvestments)} onChange={(v) => set({ currentInvestments: toStore(v) })} />
         </div>
         <div>
           <label>Monthly Contribution ({dc})</label>
-          <NumberInput value={monthlyContribution} onChange={setMonthlyContribution} />
+          <NumberInput value={toDisplay(fire.monthlyContribution)} onChange={(v) => set({ monthlyContribution: toStore(v) })} />
         </div>
         <div>
           <label>Expected Annual Return (%)</label>
-          <NumberInput value={annualReturn} onChange={setAnnualReturn} decimals={1} />
+          <NumberInput value={fire.annualReturn} onChange={(v) => set({ annualReturn: v })} decimals={1} />
         </div>
       </div>
 
@@ -46,7 +48,7 @@ export function FireCalculator() {
         <div>
           <div className="text-sm text-stone-400">FIRE Number</div>
           <div className="text-lg font-bold font-mono text-emerald-400">
-            {formatCurrency(fireNumber, dc)}
+            {formatCurrency(toDisplay(fireNumber), dc)}
           </div>
           <div className="text-xs text-stone-500">25x annual expenses</div>
         </div>

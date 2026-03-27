@@ -108,9 +108,9 @@ export function FinancesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <h1 className="text-2xl font-bold font-mono">Finances</h1>
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-3 text-xs sm:text-sm">
           <span className="text-stone-500 font-mono">1 AED = {rates.AED_GBP.toFixed(4)} GBP</span>
           <span className="text-stone-500 font-mono">1 AED = {rates.AED_USD.toFixed(4)} USD</span>
           <button
@@ -126,7 +126,7 @@ export function FinancesPage() {
 
       {/* Person details */}
       <Card>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <PersonHeader person={p1} onChange={updatePerson('person1')} />
           <PersonHeader person={p2} onChange={updatePerson('person2')} />
         </div>
@@ -135,7 +135,7 @@ export function FinancesPage() {
       {/* Income */}
       <Card>
         <h2 className="text-lg font-semibold mb-4">Monthly Income</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
             <PersonIncome person={p1} onChange={updatePerson('person1')} />
@@ -150,7 +150,7 @@ export function FinancesPage() {
       {/* Fixed Expenses */}
       <Card>
         <h2 className="text-lg font-semibold mb-4">Fixed Expenses</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
             <PersonExpenses person={p1} onChange={updatePerson('person1')} displayCurrency={dc} rates={rates} />
@@ -165,7 +165,7 @@ export function FinancesPage() {
       {/* Variable Spend */}
       <Card>
         <h2 className="text-lg font-semibold mb-4">Monthly Variable Spend</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
             <PersonVariableSpend person={p1} onChange={updatePerson('person1')} />
@@ -180,7 +180,7 @@ export function FinancesPage() {
       {/* Pot Contributions */}
       <Card>
         <h2 className="text-lg font-semibold mb-4">Pot Contributions</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
             <ContributionsColumn person={p1} savingsPots={state.savingsPots} onChange={updatePerson('person1')} displayCurrency={dc} rates={rates} />
@@ -195,7 +195,7 @@ export function FinancesPage() {
       {/* Surplus */}
       <Card>
         <h2 className="text-lg font-semibold mb-4">Monthly Surplus</h2>
-        <div className="grid grid-cols-2 gap-6 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
           <div>
             <div className="text-sm text-stone-500">{p1.name}</div>
             <div className={`text-lg font-bold font-mono ${p1Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
@@ -209,7 +209,7 @@ export function FinancesPage() {
             </div>
           </div>
         </div>
-        <div className="border-t border-stone-700 pt-4 grid grid-cols-3 gap-4">
+        <div className="border-t border-stone-700 pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <div className="text-sm text-stone-400">Combined Income</div>
             <div className="text-lg font-semibold font-mono">{fmt(totalIncome)}</div>

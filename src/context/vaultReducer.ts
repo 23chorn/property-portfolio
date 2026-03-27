@@ -1,4 +1,4 @@
-import type { VaultData, SavingsPot, Goal, NetWorthSnapshot } from '../types/vault.ts'
+import type { VaultData, Person, SavingsPot, Goal, NetWorthSnapshot, FireInputs } from '../types/vault.ts'
 
 export type VaultAction =
   | { type: 'SET_VAULT'; payload: VaultData }
@@ -12,6 +12,7 @@ export type VaultAction =
   | { type: 'DELETE_GOAL'; payload: string }
   | { type: 'ADD_SNAPSHOT'; payload: NetWorthSnapshot }
   | { type: 'DELETE_SNAPSHOT'; payload: string }
+  | { type: 'UPDATE_FIRE'; payload: Partial<FireInputs> }
 
 export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
   switch (action.type) {
@@ -25,6 +26,12 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
             AED_GBP: action.payload.meta.fxRates?.AED_GBP ?? 0.21,
             AED_USD: action.payload.meta.fxRates?.AED_USD ?? 0.27,
           },
+        },
+        fire: action.payload.fire ?? {
+          annualExpenses: 0,
+          currentInvestments: 0,
+          monthlyContribution: 0,
+          annualReturn: 7,
         },
       }
 
@@ -169,6 +176,9 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
           (s) => s.date !== action.payload,
         ),
       }
+
+    case 'UPDATE_FIRE':
+      return { ...state, fire: { ...state.fire, ...action.payload } }
 
     default:
       return state

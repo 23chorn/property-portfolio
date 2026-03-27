@@ -30,5 +30,11 @@ export function createEmptyVault(): VaultData {
     savingsPots: [],
     goals: [],
     netWorthSnapshots: [],
+    fire: {
+      annualExpenses: 0,
+      currentInvestments: 0,
+      monthlyContribution: 0,
+      annualReturn: 7,
+    },
   }
 }
