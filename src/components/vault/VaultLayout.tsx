@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import { useVault } from '../../hooks/useVault.ts'
+import { AppSwitcher } from '../shared/AppSwitcher.tsx'
+import SaveStatus from '../shared/SaveStatus.tsx'
 import type { Currency } from '../../types/vault.ts'
 
-const links = [
+const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: '⬡', end: true },
   { to: '/finances', label: 'Finances', icon: '◈', end: false },
   { to: '/savings', label: 'Savings', icon: '◰', end: false },
@@ -17,24 +19,8 @@ function VaultHeader() {
   const { state, dispatch, saveStatus } = useVault()
 
   return (
-    <header className="h-14 bg-stone-800/80 border-b border-stone-700 flex items-center justify-between px-4 sm:px-6 shrink-0">
+    <header className="min-h-[3.5rem] bg-stone-800 border-b border-stone-700 flex items-center justify-between px-4 sm:px-6 py-2 shrink-0">
       <div className="flex items-center gap-3 pl-10 lg:pl-0">
-        <span className="text-base opacity-60">◆</span>
-        <span className="font-semibold text-stone-100">Vault</span>
-        {saveStatus === 'saving' && (
-          <span className="flex items-center gap-1.5 text-xs text-amber-400">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            Saving...
-          </span>
-        )}
-        {saveStatus === 'saved' && (
-          <span className="text-xs text-stone-500">Saved</span>
-        )}
-        {saveStatus === 'local-only' && (
-          <span className="text-xs text-amber-400">Local only</span>
-        )}
-      </div>
-      <div className="flex items-center gap-3">
         <div className="flex rounded-lg overflow-hidden border border-stone-700">
           {CURRENCIES.map((c) => (
             <button
@@ -51,24 +37,23 @@ function VaultHeader() {
           ))}
         </div>
       </div>
+      <SaveStatus status={saveStatus} />
     </header>
   )
 }
 
 function VaultSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const location = useLocation()
-
   const handleNav = () => {
     onClose()
   }
 
   return (
     <>
-      {/* Mobile hamburger — hidden when sidebar is open */}
+      {/* Mobile hamburger */}
       {!open && (
         <button
           onClick={() => onClose()}
-          className="lg:hidden fixed top-[calc(2.5rem+0.75rem)] left-3 z-50 bg-stone-800 border border-stone-700 rounded-lg p-2 text-stone-100"
+          className="lg:hidden fixed top-3 left-3 z-50 bg-stone-800 border border-stone-700 rounded-lg p-2 text-stone-100"
           aria-label="Open menu"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -88,15 +73,15 @@ function VaultSidebar({ open, onClose }: { open: boolean; onClose: () => void })
       {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-40
-        w-56 bg-stone-800/50 border-r border-stone-700 p-4 shrink-0
+        w-60 bg-stone-800 border-r border-stone-700 flex flex-col shrink-0
         transform transition-transform duration-200 ease-out
         ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
-        <div className="flex items-center justify-between mb-4 lg:hidden">
-          <span className="text-sm font-semibold text-stone-100">Navigation</span>
+        <div className="p-5 border-b border-stone-700 flex items-start justify-between">
+          <AppSwitcher />
           <button
             onClick={onClose}
-            className="p-1 text-stone-500 hover:text-stone-100"
+            className="lg:hidden p-1 text-stone-500 hover:text-stone-100"
             aria-label="Close menu"
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -104,8 +89,10 @@ function VaultSidebar({ open, onClose }: { open: boolean; onClose: () => void })
             </svg>
           </button>
         </div>
-        <div className="space-y-1">
-          {links.map(({ to, label, icon, end }) => (
+
+        {/* Navigation */}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {NAV_ITEMS.map(({ to, label, icon, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -114,8 +101,8 @@ function VaultSidebar({ open, onClose }: { open: boolean; onClose: () => void })
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                   isActive
-                    ? 'bg-rose-600/20 text-rose-400'
-                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-700/50'
+                    ? 'bg-rose-600/10 text-rose-400'
+                    : 'text-stone-400 hover:bg-stone-700 hover:text-stone-100'
                 }`
               }
             >
@@ -123,7 +110,7 @@ function VaultSidebar({ open, onClose }: { open: boolean; onClose: () => void })
               <span>{label}</span>
             </NavLink>
           ))}
-        </div>
+        </nav>
       </aside>
     </>
   )
@@ -133,10 +120,10 @@ export function VaultLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex flex-col h-full">
-      <VaultHeader />
-      <div className="flex flex-1 overflow-hidden">
-        <VaultSidebar open={sidebarOpen} onClose={() => setSidebarOpen(!sidebarOpen)} />
+    <div className="h-full flex">
+      <VaultSidebar open={sidebarOpen} onClose={() => setSidebarOpen(!sidebarOpen)} />
+      <div className="flex-1 flex flex-col min-w-0">
+        <VaultHeader />
         <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6">
           <Outlet />
         </main>

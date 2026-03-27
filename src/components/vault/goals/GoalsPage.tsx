@@ -30,7 +30,7 @@ export function GoalsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Goals</h1>
+        <h1 className="text-2xl font-bold font-mono">Goals</h1>
         <button
           onClick={() => setAdding(true)}
           className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-sm text-white font-medium"

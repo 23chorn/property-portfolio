@@ -19,7 +19,6 @@ export interface PotContribution {
 
 export interface Person {
   name: string
-  currency: Currency
   monthlySalaryGross: number
   monthlySalaryNet: number
   monthlyFixedExpenses: MonthlyExpense[]

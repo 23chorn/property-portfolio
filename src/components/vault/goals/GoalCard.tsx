@@ -30,7 +30,7 @@ export function GoalCard({ goal, pots, people, fxRates, onEdit, onDelete }: Goal
 
   const { currentAmount, percentage } = calcGoalProgress(goal, pots, fxRates)
   const targetInAED = toAED(goal.targetAmount, goal.currency, fxRates)
-  const monthlyInflow = calcGoalMonthlyInflow(goal, people.person1, people.person2, fxRates)
+  const monthlyInflow = calcGoalMonthlyInflow(goal, people.person1, people.person2, fxRates, dc)
   const remaining = targetInAED - currentAmount
   const months = calcMonthsToTarget(remaining, monthlyInflow)
   const projectedDateStr = calcProjectedDate(months)

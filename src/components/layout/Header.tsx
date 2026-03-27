@@ -1,4 +1,4 @@
-import SaveStatus from '../shared/SaveStatus'
+import SaveStatus from '../shared/SaveStatus.tsx'
 
 function Badge({ label, value, variant = 'default' }) {
   const variants = {

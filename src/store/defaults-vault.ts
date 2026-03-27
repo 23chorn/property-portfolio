@@ -1,9 +1,8 @@
 import type { VaultData, Person } from '../types/vault.ts'
 
-function createEmptyPerson(name: string, currency: "AED" | "GBP" | "USD"): Person {
+function createEmptyPerson(name: string): Person {
   return {
     name,
-    currency,
     monthlySalaryGross: 0,
     monthlySalaryNet: 0,
     monthlyFixedExpenses: [],
@@ -24,8 +23,8 @@ export function createEmptyVault(): VaultData {
       },
     },
     people: {
-      person1: createEmptyPerson("Person 1", "AED"),
-      person2: createEmptyPerson("Person 2", "GBP"),
+      person1: createEmptyPerson("Person 1"),
+      person2: createEmptyPerson("Person 2"),
     },
     property: [],
     savingsPots: [],

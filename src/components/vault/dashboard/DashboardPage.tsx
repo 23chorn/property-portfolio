@@ -27,7 +27,7 @@ export function DashboardPage() {
   const p1Surplus = calcPersonMonthlySurplus(p1)
   const p2Surplus = calcPersonMonthlySurplus(p2)
   const combinedSurplus =
-    toAED(p1Surplus, p1.currency, rates) + toAED(p2Surplus, p2.currency, rates)
+    toAED(p1Surplus, dc, rates) + toAED(p2Surplus, dc, rates)
 
   const totalPropertyCashflow = state.property.reduce(
     (sum, p) => sum + toAED(calcPropertyMonthlyCashflow(p), p.currency, rates),
@@ -35,13 +35,13 @@ export function DashboardPage() {
   )
 
   const totalIncome =
-    toAED(p1.monthlySalaryNet, p1.currency, rates) +
-    toAED(p2.monthlySalaryNet, p2.currency, rates) +
+    toAED(p1.monthlySalaryNet, dc, rates) +
+    toAED(p2.monthlySalaryNet, dc, rates) +
     state.property.reduce((sum, p) => sum + toAED(p.monthlyRentalIncome, p.currency, rates), 0)
 
   const totalOutgoings =
-    toAED(calcPersonMonthlyOutgoings(p1), p1.currency, rates) +
-    toAED(calcPersonMonthlyOutgoings(p2), p2.currency, rates) +
+    toAED(calcPersonMonthlyOutgoings(p1), dc, rates) +
+    toAED(calcPersonMonthlyOutgoings(p2), dc, rates) +
     state.property.reduce(
       (sum, p) =>
         sum +
@@ -54,7 +54,7 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <h1 className="text-2xl font-bold font-mono font-mono">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
@@ -69,7 +69,7 @@ export function DashboardPage() {
 
         <Card>
           <div className="text-sm text-stone-400 mb-1">Monthly Cash Flow</div>
-          <div className="text-2xl font-bold">
+          <div className="text-2xl font-bold font-mono font-mono">
             <span className={combinedSurplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
               {fmt(combinedSurplus)}
             </span>
@@ -100,7 +100,7 @@ export function DashboardPage() {
             {state.goals.map((goal) => {
               const { currentAmount, percentage } = calcGoalProgress(goal, state.savingsPots, rates)
               const targetInAED = toAED(goal.targetAmount, goal.currency, rates)
-              const monthlyInflow = calcGoalMonthlyInflow(goal, p1, p2, rates)
+              const monthlyInflow = calcGoalMonthlyInflow(goal, p1, p2, rates, dc)
               const remaining = targetInAED - currentAmount
               const months = calcMonthsToTarget(remaining, monthlyInflow)
 

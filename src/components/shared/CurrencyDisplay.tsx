@@ -21,7 +21,7 @@ export function CurrencyDisplay({ amount, currency, fxRates, displayCurrency, cl
   if (showIn === currency) {
     return (
       <div className={className}>
-        <div className={sizeClasses[size]}>{formatCurrency(amount, currency)}</div>
+        <div className={`font-mono ${sizeClasses[size]}`}>{formatCurrency(amount, currency)}</div>
       </div>
     )
   }
@@ -29,8 +29,8 @@ export function CurrencyDisplay({ amount, currency, fxRates, displayCurrency, cl
   const converted = convertCurrency(amount, currency, showIn, fxRates)
   return (
     <div className={className}>
-      <div className={sizeClasses[size]}>{formatCurrency(converted, showIn)}</div>
-      <div className="text-xs text-stone-500">{formatCurrency(amount, currency)}</div>
+      <div className={`font-mono ${sizeClasses[size]}`}>{formatCurrency(converted, showIn)}</div>
+      <div className="font-mono text-xs text-stone-500">{formatCurrency(amount, currency)}</div>
     </div>
   )
 }

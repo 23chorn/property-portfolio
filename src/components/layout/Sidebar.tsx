@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AppSwitcher } from '../shared/AppSwitcher.tsx'
 
 const NAV_ITEMS = [
   { id: 'overview', label: 'Overview', icon: '⬡' },
@@ -48,12 +49,7 @@ export default function Sidebar({ activeSection, onNavigate, propertyName }) {
         ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
         <div className="p-5 border-b border-stone-700 flex items-start justify-between">
-          <div>
-            <h1 className="text-sm font-semibold text-stone-100 tracking-wide uppercase">
-              Property Portfolio
-            </h1>
-            <p className="text-xs text-stone-500 mt-1">Analyser</p>
-          </div>
+          <AppSwitcher />
           <button
             onClick={() => setOpen(false)}
             className="lg:hidden p-1 text-stone-500 hover:text-stone-100"

@@ -1,9 +1,10 @@
 import { formatCurrency } from '../../../utils/currency.ts'
-import type { Person, MonthlyExpense } from '../../../types/vault.ts'
+import type { Person, MonthlyExpense, Currency } from '../../../types/vault.ts'
 
 interface PersonColumnProps {
   person: Person
   onChange: (person: Person) => void
+  displayCurrency?: Currency
 }
 
 export function PersonHeader({ person, onChange }: PersonColumnProps) {
@@ -42,7 +43,7 @@ export function PersonIncome({ person, onChange }: PersonColumnProps) {
   )
 }
 
-export function PersonExpenses({ person, onChange }: PersonColumnProps) {
+export function PersonExpenses({ person, onChange, displayCurrency }: PersonColumnProps) {
   const update = (partial: Partial<Person>) => onChange({ ...person, ...partial })
 
   const updateExpense = (index: number, expense: MonthlyExpense) => {
@@ -86,7 +87,7 @@ export function PersonExpenses({ person, onChange }: PersonColumnProps) {
       </div>
       <div className="flex items-center justify-between mt-3">
         <button onClick={addExpense} className="text-sm text-amber-400 hover:text-amber-300">+ Add</button>
-        <span className="text-sm text-stone-400">{formatCurrency(total, person.currency)}</span>
+        <span className="text-sm text-stone-400">{formatCurrency(total, displayCurrency)}</span>
       </div>
     </div>
   )
