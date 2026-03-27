@@ -145,8 +145,8 @@ export function FireCalculator() {
   const set = (partial: Partial<typeof fire>) =>
     dispatch({ type: 'UPDATE_FIRE', payload: partial })
 
-  const targetYears = fire.targetYears ?? 20
-  const inflationRate = fire.inflationRate ?? 3
+  const targetYears = Math.max(1, fire.targetYears ?? 20)
+  const inflationRate = Math.max(0, fire.inflationRate ?? 3)
   const withdrawalRate = 4
   const todayFireNumber = fire.annualExpenses / (withdrawalRate / 100)
   const adjustedFireNumber = fireNumberAtYear(fire.annualExpenses, withdrawalRate, inflationRate, targetYears)
@@ -196,15 +196,15 @@ export function FireCalculator() {
         </div>
         <div>
           <label>Target Years</label>
-          <NumberInput value={targetYears} onChange={(v) => set({ targetYears: v })} />
+          <NumberInput value={targetYears} onChange={(v) => set({ targetYears: v })} lazy />
         </div>
         <div>
           <label>Expected Return (%/yr)</label>
-          <NumberInput value={fire.annualReturn} onChange={(v) => set({ annualReturn: v })} decimals={1} />
+          <NumberInput value={fire.annualReturn} onChange={(v) => set({ annualReturn: v })} decimals={1} lazy />
         </div>
         <div>
           <label>Inflation (%/yr)</label>
-          <NumberInput value={inflationRate} onChange={(v) => set({ inflationRate: v })} decimals={1} />
+          <NumberInput value={inflationRate} onChange={(v) => set({ inflationRate: v })} decimals={1} lazy />
         </div>
       </div>
 

@@ -6,6 +6,8 @@ interface NumberInputProps {
   className?: string
   step?: string
   decimals?: number
+  /** Only fire onChange on blur, not on every keystroke */
+  lazy?: boolean
 }
 
 function formatWithCommas(n: number, decimals: number): string {
@@ -16,7 +18,7 @@ function formatWithCommas(n: number, decimals: number): string {
   })
 }
 
-export function NumberInput({ value, onChange, className = '', step, decimals = 0 }: NumberInputProps) {
+export function NumberInput({ value, onChange, className = '', step, decimals = 0, lazy = false }: NumberInputProps) {
   const [focused, setFocused] = useState(false)
   const [raw, setRaw] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -45,8 +47,10 @@ export function NumberInput({ value, onChange, className = '', step, decimals = 
     // Allow digits, decimal point, minus
     if (v === '' || /^-?\d*\.?\d*$/.test(v)) {
       setRaw(v)
-      const parsed = parseFloat(v) || 0
-      onChange(parsed)
+      if (!lazy) {
+        const parsed = parseFloat(v) || 0
+        onChange(parsed)
+      }
     }
   }
 
