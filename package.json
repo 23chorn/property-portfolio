@@ -1,5 +1,5 @@
 {
-  "name": "property-analyser",
+  "name": "vault-cs",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,11 +11,14 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^25.5.0",
     "@vercel/kv": "^3.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.2",
     "recharts": "^3.8.1",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
