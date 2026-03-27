@@ -1,5 +1,4 @@
-import type { VaultData, Person, SavingsPot, Goal, NetWorthSnapshot, Currency } from '../types/vault.ts'
-import { convertCurrency, type FxRates } from '../utils/currency.ts'
+import type { VaultData, SavingsPot, Goal, NetWorthSnapshot } from '../types/vault.ts'
 
 export type VaultAction =
   | { type: 'SET_VAULT'; payload: VaultData }
@@ -13,25 +12,6 @@ export type VaultAction =
   | { type: 'DELETE_GOAL'; payload: string }
   | { type: 'ADD_SNAPSHOT'; payload: NetWorthSnapshot }
   | { type: 'DELETE_SNAPSHOT'; payload: string }
-
-function convertPerson(person: Person, from: Currency, to: Currency, rates: FxRates): Person {
-  if (from === to) return person
-  const c = (amount: number) => Math.round(convertCurrency(amount, from, to, rates))
-  return {
-    ...person,
-    monthlySalaryGross: c(person.monthlySalaryGross),
-    monthlySalaryNet: c(person.monthlySalaryNet),
-    monthlyFixedExpenses: person.monthlyFixedExpenses.map((e) => ({
-      ...e,
-      amount: c(e.amount),
-    })),
-    monthlyVariableSpend: c(person.monthlyVariableSpend),
-    monthlyContributions: person.monthlyContributions.map((cont) => ({
-      ...cont,
-      amount: c(cont.amount),
-    })),
-  }
-}
 
 export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
   switch (action.type) {
@@ -48,26 +28,8 @@ export function vaultReducer(state: VaultData, action: VaultAction): VaultData {
         },
       }
 
-    case 'UPDATE_META': {
-      const newMeta = { ...state.meta, ...action.payload }
-      const oldCurrency = state.meta.displayCurrency
-      const newCurrency = newMeta.displayCurrency
-
-      // If display currency changed, convert both people's values
-      if (newCurrency && newCurrency !== oldCurrency) {
-        const rates = newMeta.fxRates ?? state.meta.fxRates
-        return {
-          ...state,
-          meta: newMeta,
-          people: {
-            person1: convertPerson(state.people.person1, oldCurrency, newCurrency, rates),
-            person2: convertPerson(state.people.person2, oldCurrency, newCurrency, rates),
-          },
-        }
-      }
-
-      return { ...state, meta: newMeta }
-    }
+    case 'UPDATE_META':
+      return { ...state, meta: { ...state.meta, ...action.payload } }
 
     case 'UPDATE_PERSON':
       return {

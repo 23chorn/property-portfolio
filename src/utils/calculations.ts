@@ -1,4 +1,4 @@
-import type { Person, Property, Goal, SavingsPot, VaultData, Currency } from '../types/vault.ts'
+import type { Person, Property, Goal, SavingsPot, VaultData } from '../types/vault.ts'
 import { toAED, type FxRates } from './currency.ts'
 
 export function calcPersonMonthlyOutgoings(person: Person): number {
@@ -47,15 +47,13 @@ export function calcGoalMonthlyInflow(
   goal: Goal,
   person1: Person,
   person2: Person,
-  rates: FxRates,
-  displayCurrency: Currency,
 ): number {
   const linkedPotIds = new Set(goal.linkedPotIds)
   let total = 0
   for (const person of [person1, person2]) {
     for (const contrib of person.monthlyContributions) {
       if (linkedPotIds.has(contrib.potId)) {
-        total += toAED(contrib.amount, displayCurrency, rates)
+        total += contrib.amount // already in AED
       }
     }
   }

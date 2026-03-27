@@ -24,17 +24,14 @@ export function DashboardPage() {
   const p2 = state.people.person2
   const p1Surplus = calcPersonMonthlySurplus(p1)
   const p2Surplus = calcPersonMonthlySurplus(p2)
-  const combinedSurplus =
-    toAED(p1Surplus, dc, rates) + toAED(p2Surplus, dc, rates)
+  const combinedSurplus = p1Surplus + p2Surplus
 
   const totalIncome =
-    toAED(p1.monthlySalaryNet, dc, rates) +
-    toAED(p2.monthlySalaryNet, dc, rates) +
+    p1.monthlySalaryNet + p2.monthlySalaryNet +
     state.property.reduce((sum, p) => sum + toAED(p.monthlyRentalIncome, p.currency, rates), 0)
 
   const totalOutgoings =
-    toAED(calcPersonMonthlyOutgoings(p1), dc, rates) +
-    toAED(calcPersonMonthlyOutgoings(p2), dc, rates) +
+    calcPersonMonthlyOutgoings(p1) + calcPersonMonthlyOutgoings(p2) +
     state.property.reduce(
       (sum, p) =>
         sum +
@@ -81,7 +78,7 @@ export function DashboardPage() {
             {state.goals.map((goal) => {
               const { currentAmount, percentage } = calcGoalProgress(goal, state.savingsPots, rates)
               const targetInAED = toAED(goal.targetAmount, goal.currency, rates)
-              const monthlyInflow = calcGoalMonthlyInflow(goal, p1, p2, rates, dc)
+              const monthlyInflow = calcGoalMonthlyInflow(goal, p1, p2)
               const remaining = targetInAED - currentAmount
               const months = calcMonthsToTarget(remaining, monthlyInflow)
 

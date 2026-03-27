@@ -1,6 +1,18 @@
-import { formatCurrency } from '../../../utils/currency.ts'
+import { formatCurrency, fromAED, toAED, type FxRates } from '../../../utils/currency.ts'
 import { NumberInput } from '../../shared/NumberInput.tsx'
+import { useVault } from '../../../hooks/useVault.ts'
 import type { Person, MonthlyExpense, Currency } from '../../../types/vault.ts'
+
+function useCurrencyInput() {
+  const { state } = useVault()
+  const dc = state.meta.displayCurrency
+  const rates = state.meta.fxRates
+  // display: AED stored → display currency for input
+  const toDisplay = (aed: number) => fromAED(aed, dc, rates)
+  // store: display currency input → AED for storage
+  const toStore = (display: number) => toAED(display, dc, rates)
+  return { dc, rates, toDisplay, toStore }
+}
 
 interface PersonColumnProps {
   person: Person
@@ -21,21 +33,22 @@ export function PersonHeader({ person, onChange }: PersonColumnProps) {
 
 export function PersonIncome({ person, onChange }: PersonColumnProps) {
   const update = (partial: Partial<Person>) => onChange({ ...person, ...partial })
+  const { toDisplay, toStore } = useCurrencyInput()
 
   return (
     <div className="space-y-3">
       <div>
         <label>Gross</label>
         <NumberInput
-          value={person.monthlySalaryGross}
-          onChange={(v) => update({ monthlySalaryGross: v })}
+          value={toDisplay(person.monthlySalaryGross)}
+          onChange={(v) => update({ monthlySalaryGross: toStore(v) })}
         />
       </div>
       <div>
         <label>Net</label>
         <NumberInput
-          value={person.monthlySalaryNet}
-          onChange={(v) => update({ monthlySalaryNet: v })}
+          value={toDisplay(person.monthlySalaryNet)}
+          onChange={(v) => update({ monthlySalaryNet: toStore(v) })}
         />
       </div>
     </div>
@@ -44,6 +57,7 @@ export function PersonIncome({ person, onChange }: PersonColumnProps) {
 
 export function PersonExpenses({ person, onChange, displayCurrency }: PersonColumnProps) {
   const update = (partial: Partial<Person>) => onChange({ ...person, ...partial })
+  const { dc, toDisplay, toStore } = useCurrencyInput()
 
   const updateExpense = (index: number, expense: MonthlyExpense) => {
     const updated = [...person.monthlyFixedExpenses]
@@ -74,8 +88,8 @@ export function PersonExpenses({ person, onChange, displayCurrency }: PersonColu
             />
             <NumberInput
               className="w-24"
-              value={expense.amount}
-              onChange={(v) => updateExpense(i, { ...expense, amount: v })}
+              value={toDisplay(expense.amount)}
+              onChange={(v) => updateExpense(i, { ...expense, amount: toStore(v) })}
             />
             <button onClick={() => removeExpense(i)} className="text-stone-500 hover:text-rose-400 px-1">
               &times;
@@ -85,7 +99,7 @@ export function PersonExpenses({ person, onChange, displayCurrency }: PersonColu
       </div>
       <div className="flex items-center justify-between mt-3">
         <button onClick={addExpense} className="text-sm text-amber-400 hover:text-amber-300">+ Add</button>
-        <span className="text-sm text-stone-400 font-mono">{formatCurrency(total, displayCurrency)}</span>
+        <span className="text-sm text-stone-400 font-mono">{formatCurrency(toDisplay(total), dc)}</span>
       </div>
     </div>
   )
@@ -93,11 +107,12 @@ export function PersonExpenses({ person, onChange, displayCurrency }: PersonColu
 
 export function PersonVariableSpend({ person, onChange }: PersonColumnProps) {
   const update = (partial: Partial<Person>) => onChange({ ...person, ...partial })
+  const { toDisplay, toStore } = useCurrencyInput()
 
   return (
     <NumberInput
-      value={person.monthlyVariableSpend}
-      onChange={(v) => update({ monthlyVariableSpend: v })}
+      value={toDisplay(person.monthlyVariableSpend)}
+      onChange={(v) => update({ monthlyVariableSpend: toStore(v) })}
     />
   )
 }

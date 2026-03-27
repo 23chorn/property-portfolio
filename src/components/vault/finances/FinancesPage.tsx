@@ -1,13 +1,16 @@
 import { useVault } from '../../../hooks/useVault.ts'
 import { Card } from '../../shared/Card.tsx'
-import { formatCurrency, toAED, formatInDisplayCurrency } from '../../../utils/currency.ts'
+import { formatCurrency, toAED, fromAED, formatInDisplayCurrency } from '../../../utils/currency.ts'
 import { calcPersonMonthlySurplus, calcPersonMonthlyOutgoings } from '../../../utils/calculations.ts'
 import { PersonHeader, PersonIncome, PersonExpenses, PersonVariableSpend } from './PersonColumn.tsx'
 import { NumberInput } from '../../shared/NumberInput.tsx'
 import type { Person, SavingsPot, PotContribution, Currency } from '../../../types/vault.ts'
+import type { FxRates } from '../../../utils/currency.ts'
 
-function ContributionsColumn({ person, savingsPots, onChange, displayCurrency }: { person: Person; savingsPots: SavingsPot[]; onChange: (p: Person) => void; displayCurrency: Currency }) {
+function ContributionsColumn({ person, savingsPots, onChange, displayCurrency, rates }: { person: Person; savingsPots: SavingsPot[]; onChange: (p: Person) => void; displayCurrency: Currency; rates: FxRates }) {
   const update = (partial: Partial<Person>) => onChange({ ...person, ...partial })
+  const toDisplay = (aed: number) => fromAED(aed, displayCurrency, rates)
+  const toStore = (display: number) => toAED(display, displayCurrency, rates)
 
   const updateContribution = (index: number, contrib: PotContribution) => {
     const updated = [...person.monthlyContributions]
@@ -47,8 +50,8 @@ function ContributionsColumn({ person, savingsPots, onChange, displayCurrency }:
             </select>
             <NumberInput
               className="w-24"
-              value={contrib.amount}
-              onChange={(v) => updateContribution(i, { ...contrib, amount: v })}
+              value={toDisplay(contrib.amount)}
+              onChange={(v) => updateContribution(i, { ...contrib, amount: toStore(v) })}
             />
             <button onClick={() => removeContribution(i)} className="text-stone-500 hover:text-rose-400 px-1">
               &times;
@@ -58,7 +61,7 @@ function ContributionsColumn({ person, savingsPots, onChange, displayCurrency }:
       </div>
       <div className="flex items-center justify-between mt-3">
         <button onClick={addContribution} className="text-sm text-amber-400 hover:text-amber-300">+ Add</button>
-        {total > 0 && <span className="text-sm text-stone-400 font-mono">{formatCurrency(total, displayCurrency)}</span>}
+        {total > 0 && <span className="text-sm text-stone-400 font-mono">{formatCurrency(toDisplay(total), displayCurrency)}</span>}
       </div>
     </div>
   )
@@ -85,9 +88,9 @@ export function FinancesPage() {
 
   const p1Surplus = calcPersonMonthlySurplus(p1)
   const p2Surplus = calcPersonMonthlySurplus(p2)
-  const totalIncome = toAED(p1.monthlySalaryNet, dc, rates) + toAED(p2.monthlySalaryNet, dc, rates)
-  const totalOutgoings = toAED(calcPersonMonthlyOutgoings(p1), dc, rates) + toAED(calcPersonMonthlyOutgoings(p2), dc, rates)
-  const totalSurplus = toAED(p1Surplus, dc, rates) + toAED(p2Surplus, dc, rates)
+  const totalIncome = p1.monthlySalaryNet + p2.monthlySalaryNet
+  const totalOutgoings = calcPersonMonthlyOutgoings(p1) + calcPersonMonthlyOutgoings(p2)
+  const totalSurplus = p1Surplus + p2Surplus
 
   return (
     <div className="space-y-6">
@@ -134,11 +137,11 @@ export function FinancesPage() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
-            <PersonExpenses person={p1} onChange={updatePerson('person1')} displayCurrency={dc} />
+            <PersonExpenses person={p1} onChange={updatePerson('person1')} displayCurrency={dc} rates={rates} />
           </div>
           <div>
             <div className="text-sm text-stone-500 mb-2">{p2.name}</div>
-            <PersonExpenses person={p2} onChange={updatePerson('person2')} displayCurrency={dc} />
+            <PersonExpenses person={p2} onChange={updatePerson('person2')} displayCurrency={dc} rates={rates} />
           </div>
         </div>
       </Card>
@@ -164,11 +167,11 @@ export function FinancesPage() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
-            <ContributionsColumn person={p1} savingsPots={state.savingsPots} onChange={updatePerson('person1')} displayCurrency={dc} />
+            <ContributionsColumn person={p1} savingsPots={state.savingsPots} onChange={updatePerson('person1')} displayCurrency={dc} rates={rates} />
           </div>
           <div>
             <div className="text-sm text-stone-500 mb-2">{p2.name}</div>
-            <ContributionsColumn person={p2} savingsPots={state.savingsPots} onChange={updatePerson('person2')} displayCurrency={dc} />
+            <ContributionsColumn person={p2} savingsPots={state.savingsPots} onChange={updatePerson('person2')} displayCurrency={dc} rates={rates} />
           </div>
         </div>
       </Card>
@@ -180,13 +183,13 @@ export function FinancesPage() {
           <div>
             <div className="text-sm text-stone-500">{p1.name}</div>
             <div className={`text-lg font-bold font-mono ${p1Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-              {fmt(toAED(p1Surplus, dc, rates))}
+              {fmt(p1Surplus)}
             </div>
           </div>
           <div>
             <div className="text-sm text-stone-500">{p2.name}</div>
             <div className={`text-lg font-bold font-mono ${p2Surplus >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-              {fmt(toAED(p2Surplus, dc, rates))}
+              {fmt(p2Surplus)}
             </div>
           </div>
         </div>
