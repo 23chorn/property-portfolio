@@ -11,7 +11,7 @@ function Badge({ label, value, variant = 'default' }) {
 
   return (
     <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-xs font-medium ${variants[variant]}`}>
-      <span className="text-text-muted hidden sm:inline">{label}</span>
+      {label && <span className="text-text-muted">{label}</span>}
       {value}
     </span>
   )
@@ -27,9 +27,8 @@ export default function Header({ property, saveStatus }) {
       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 pl-10 lg:pl-0">
         <h2 className="text-sm sm:text-base font-medium text-text-primary truncate">{meta.name}</h2>
         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-          <Badge label="EPC" value={meta.epcRating} variant={meta.epcRating >= 'D' ? 'warning' : 'success'} />
           <Badge label="LTV" value={`${ltv}%`} variant={ltvVariant} />
-          <Badge label="" value={mortgage.type === 'interest-only' ? 'I/O' : 'Repayment'} variant="info" />
+          <Badge label={mortgage.type === 'interest-only' ? 'I/O' : 'Repayment'} value={`${mortgage.currentRate}%`} variant="info" />
           {!tax.nrlsRegistered && (
             <Badge label="" value="NRLS" variant="danger" />
           )}
