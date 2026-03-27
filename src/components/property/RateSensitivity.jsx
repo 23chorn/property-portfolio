@@ -82,9 +82,9 @@ export default function RateSensitivity({ property }) {
           <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
             <XAxis dataKey="rate" tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={0} stroke="#4e5266" />
-            <Bar dataKey="monthlyPL" radius={[4, 4, 0, 0]}>
+            <Bar dataKey="monthlyPL" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }}>
               {data.map((entry, i) => (
                 <Cell
                   key={i}

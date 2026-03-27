@@ -1,16 +1,48 @@
-# React + Vite
+# Property Portfolio Analyser
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A single-page React dashboard for modelling rental property financials, projections, and investment decisions. Built for a non-resident UK landlord.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Property Overview** — key metrics, equity, yield, status alerts
+- **Configuration** — all inputs via synced sliders + number fields
+- **Cost Breakdown** — full annual P&L with Section 24 tax walkthrough
+- **Mortgage Model** — LTV trajectory, exit strategies, repayment vehicle calc
+- **Rate Sensitivity** — cashflow impact across interest rates 3%–8%
+- **20-Year Projection** — phase 1 (with mortgage) and phase 2 (cleared), charts + year-by-year table
+- **Sell vs Hold** — side-by-side comparison with sensitivity analysis at different growth rates
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 18, Vite, Tailwind CSS, Recharts
+- Vercel KV (Redis) for cloud persistence — falls back to localStorage locally
+- Vercel Serverless Functions for API routes
 
-## Expanding the ESLint configuration
+## Local Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+No KV credentials needed locally — the app uses localStorage as a fallback automatically.
+
+## Vercel Deployment
+
+```bash
+vercel login
+vercel link
+vercel env pull       # pulls KV env vars into .env.local
+
+# Create a KV store in Vercel dashboard:
+# Storage > Create > KV > connect to project
+
+vercel --prod         # or push to main for auto-deploy
+```
+
+## Environment Variables
+
+Required only for deployed KV persistence (set via Vercel dashboard):
+
+- `KV_REST_API_URL`
+- `KV_REST_API_TOKEN`

@@ -148,10 +148,10 @@ export default function SellVsHold({ property }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="growthRate" tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Bar dataKey="sellPath" name="Sell & Invest" fill="#3ea8ff" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="holdPath" name="Hold" fill="#00e59b" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="sellPath" name="Sell & Invest" fill="#3ea8ff" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }} />
+            <Bar dataKey="holdPath" name="Hold" fill="#00e59b" radius={[4, 4, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }} />
           </BarChart>
         </ResponsiveContainer>
       </div>

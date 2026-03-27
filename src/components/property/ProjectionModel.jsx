@@ -109,12 +109,12 @@ export default function ProjectionModel({ property }) {
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${(v / 1000).toFixed(0)}k`} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255, 255, 255, 0.1)', strokeWidth: 1 }} />
             <Legend wrapperStyle={{ fontSize: 12, color: '#8b8fa7' }} />
             <ReferenceLine x={`Yr ${projections.mortgageClearYear}`} stroke="#a78bfa" strokeDasharray="3 3" label={{ value: 'Phase 2', fill: '#a78bfa', fontSize: 10, position: 'top' }} />
-            <Area type="monotone" dataKey="propertyValue" name="Property Value" fill="#3ea8ff" fillOpacity={0.1} stroke="#3ea8ff" strokeWidth={2} />
-            <Area type="monotone" dataKey="equity" name="Equity" fill="#00e59b" fillOpacity={0.1} stroke="#00e59b" strokeWidth={2} />
-            <Line type="monotone" dataKey="cumulativeCashflow" name="Cumulative Cashflow" stroke="#ffb224" strokeWidth={2} dot={false} />
+            <Area type="monotone" dataKey="propertyValue" name="Property Value" fill="#3ea8ff" fillOpacity={0.1} stroke="#3ea8ff" strokeWidth={2} activeDot={{ stroke: '#eef0f6', strokeWidth: 1.5, r: 5 }} />
+            <Area type="monotone" dataKey="equity" name="Equity" fill="#00e59b" fillOpacity={0.1} stroke="#00e59b" strokeWidth={2} activeDot={{ stroke: '#eef0f6', strokeWidth: 1.5, r: 5 }} />
+            <Line type="monotone" dataKey="cumulativeCashflow" name="Cumulative Cashflow" stroke="#ffb224" strokeWidth={2} dot={false} activeDot={{ stroke: '#eef0f6', strokeWidth: 1.5, r: 5 }} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -126,10 +126,10 @@ export default function ProjectionModel({ property }) {
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
             <XAxis dataKey="year" tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} interval={2} />
             <YAxis tick={{ fill: '#8b8fa7', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `£${v}`} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.04)' }} />
             <ReferenceLine y={0} stroke="#4e5266" />
             <ReferenceLine x={`Yr ${projections.mortgageClearYear}`} stroke="#a78bfa" strokeDasharray="3 3" />
-            <Bar dataKey="monthlyNet" name="Monthly Net" radius={[3, 3, 0, 0]}>
+            <Bar dataKey="monthlyNet" name="Monthly Net" radius={[3, 3, 0, 0]} activeBar={{ stroke: '#eef0f6', strokeWidth: 1.5 }}>
               {chartData.map((entry, i) => (
                 <Cell key={i} fill={entry.monthlyNet >= 0 ? '#00e59b' : '#ff4d6a'} />
               ))}
