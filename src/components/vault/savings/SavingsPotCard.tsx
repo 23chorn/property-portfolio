@@ -23,7 +23,9 @@ export function SavingsPotCard({ pot, goals, people, fxRates, onEdit, onDelete }
   const fmt = (amount: number, currency: typeof dc) => formatInDisplayCurrency(toAED(amount, currency, fxRates), dc, fxRates)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
-  const linkedGoal = pot.linkedGoalId ? goals.find((g) => g.id === pot.linkedGoalId) : null
+  const linkedGoal = pot.linkedGoalId
+    ? goals.find((g) => g.id === pot.linkedGoalId)
+    : goals.find((g) => g.linkedPotIds.includes(pot.id)) ?? null
 
   const monthlyInflow = [people.person1, people.person2].reduce((sum, person) => {
     return sum + person.monthlyContributions
