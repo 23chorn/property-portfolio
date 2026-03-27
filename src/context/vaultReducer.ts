@@ -16,7 +16,7 @@ export type VaultAction =
 
 function convertPerson(person: Person, from: Currency, to: Currency, rates: FxRates): Person {
   if (from === to) return person
-  const c = (amount: number) => convertCurrency(amount, from, to, rates)
+  const c = (amount: number) => Math.round(convertCurrency(amount, from, to, rates))
   return {
     ...person,
     monthlySalaryGross: c(person.monthlySalaryGross),

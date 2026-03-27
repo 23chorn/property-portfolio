@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { NumberInput } from '../../shared/NumberInput.tsx'
 import { Modal } from '../../shared/Modal.tsx'
 import { generateId } from '../../../utils/id.ts'
 import type { SavingsPot, Goal, Currency } from '../../../types/vault.ts'
@@ -63,11 +64,11 @@ export function SavingsPotForm({ open, pot, goals, onClose, onSave }: SavingsPot
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label>Current Balance</label>
-            <input type="number" value={form.currentBalance || ''} onChange={(e) => set('currentBalance', parseFloat(e.target.value) || 0)} />
+            <NumberInput value={form.currentBalance} onChange={(v) => set('currentBalance', v)} />
           </div>
           <div>
             <label>Target Balance</label>
-            <input type="number" value={form.targetBalance || ''} onChange={(e) => set('targetBalance', parseFloat(e.target.value) || 0)} />
+            <NumberInput value={form.targetBalance} onChange={(v) => set('targetBalance', v)} />
           </div>
         </div>
         <div>

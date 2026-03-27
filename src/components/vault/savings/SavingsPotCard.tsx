@@ -3,8 +3,9 @@ import { Card } from '../../shared/Card.tsx'
 import { CurrencyDisplay } from '../../shared/CurrencyDisplay.tsx'
 import { ProgressBar } from '../../shared/ProgressBar.tsx'
 import { ConfirmDialog } from '../../shared/ConfirmDialog.tsx'
-import { formatCurrency, type FxRates } from '../../../utils/currency.ts'
+import { formatCurrency, formatInDisplayCurrency, toAED, type FxRates } from '../../../utils/currency.ts'
 import { calcMonthsToTarget } from '../../../utils/calculations.ts'
+import { useVault } from '../../../hooks/useVault.ts'
 import type { SavingsPot, Goal, VaultData } from '../../../types/vault.ts'
 
 interface SavingsPotCardProps {
@@ -17,6 +18,9 @@ interface SavingsPotCardProps {
 }
 
 export function SavingsPotCard({ pot, goals, people, fxRates, onEdit, onDelete }: SavingsPotCardProps) {
+  const { state } = useVault()
+  const dc = state.meta.displayCurrency
+  const fmt = (amount: number, currency: typeof dc) => formatInDisplayCurrency(toAED(amount, currency, fxRates), dc, fxRates)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   const linkedGoal = pot.linkedGoalId ? goals.find((g) => g.id === pot.linkedGoalId) : null
@@ -41,13 +45,13 @@ export function SavingsPotCard({ pot, goals, people, fxRates, onEdit, onDelete }
           </div>
         </div>
 
-        <CurrencyDisplay amount={pot.currentBalance} currency={pot.currency} fxRates={fxRates} size="md" />
+        <CurrencyDisplay amount={pot.currentBalance} currency={pot.currency} fxRates={fxRates} displayCurrency={dc} size="md" />
 
         {pot.targetBalance > 0 && (
           <div className="mt-3">
             <ProgressBar current={pot.currentBalance} target={pot.targetBalance} color="bg-emerald-500" />
             <div className="flex justify-between text-xs text-stone-500 mt-1">
-              <span className="font-mono">{formatCurrency(pot.currentBalance, pot.currency)} / {formatCurrency(pot.targetBalance, pot.currency)}</span>
+              <span className="font-mono">{fmt(pot.currentBalance, pot.currency)} / {fmt(pot.targetBalance, pot.currency)}</span>
               <span>{((pot.currentBalance / pot.targetBalance) * 100).toFixed(0)}%</span>
             </div>
           </div>
@@ -55,7 +59,7 @@ export function SavingsPotCard({ pot, goals, people, fxRates, onEdit, onDelete }
 
         <div className="mt-3 space-y-1 text-sm text-stone-400">
           {monthlyInflow > 0 && (
-            <div className="font-mono">Inflow: {formatCurrency(monthlyInflow, pot.currency)}/mo</div>
+            <div className="font-mono">Inflow: {fmt(monthlyInflow, pot.currency)}/mo</div>
           )}
           {months !== null && months > 0 && (
             <div>~{months} months to target</div>

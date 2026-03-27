@@ -1,4 +1,5 @@
 import { formatCurrency } from '../../../utils/currency.ts'
+import { NumberInput } from '../../shared/NumberInput.tsx'
 import type { Person, MonthlyExpense, Currency } from '../../../types/vault.ts'
 
 interface PersonColumnProps {
@@ -25,18 +26,16 @@ export function PersonIncome({ person, onChange }: PersonColumnProps) {
     <div className="space-y-3">
       <div>
         <label>Gross</label>
-        <input
-          type="number"
-          value={person.monthlySalaryGross || ''}
-          onChange={(e) => update({ monthlySalaryGross: parseFloat(e.target.value) || 0 })}
+        <NumberInput
+          value={person.monthlySalaryGross}
+          onChange={(v) => update({ monthlySalaryGross: v })}
         />
       </div>
       <div>
         <label>Net</label>
-        <input
-          type="number"
-          value={person.monthlySalaryNet || ''}
-          onChange={(e) => update({ monthlySalaryNet: parseFloat(e.target.value) || 0 })}
+        <NumberInput
+          value={person.monthlySalaryNet}
+          onChange={(v) => update({ monthlySalaryNet: v })}
         />
       </div>
     </div>
@@ -73,11 +72,10 @@ export function PersonExpenses({ person, onChange, displayCurrency }: PersonColu
               onChange={(e) => updateExpense(i, { ...expense, label: e.target.value })}
               placeholder="e.g. Rent"
             />
-            <input
+            <NumberInput
               className="w-24"
-              type="number"
-              value={expense.amount || ''}
-              onChange={(e) => updateExpense(i, { ...expense, amount: parseFloat(e.target.value) || 0 })}
+              value={expense.amount}
+              onChange={(v) => updateExpense(i, { ...expense, amount: v })}
             />
             <button onClick={() => removeExpense(i)} className="text-stone-500 hover:text-rose-400 px-1">
               &times;
@@ -97,10 +95,9 @@ export function PersonVariableSpend({ person, onChange }: PersonColumnProps) {
   const update = (partial: Partial<Person>) => onChange({ ...person, ...partial })
 
   return (
-    <input
-      type="number"
-      value={person.monthlyVariableSpend || ''}
-      onChange={(e) => update({ monthlyVariableSpend: parseFloat(e.target.value) || 0 })}
+    <NumberInput
+      value={person.monthlyVariableSpend}
+      onChange={(v) => update({ monthlyVariableSpend: v })}
     />
   )
 }

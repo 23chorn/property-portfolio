@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { Card } from '../../shared/Card.tsx'
+import { NumberInput } from '../../shared/NumberInput.tsx'
 import { formatCurrency } from '../../../utils/currency.ts'
 import { calcFireNumber, calcYearsToFire } from '../../../utils/calculations.ts'
+import { useVault } from '../../../hooks/useVault.ts'
 
 export function FireCalculator() {
+  const { state } = useVault()
+  const dc = state.meta.displayCurrency
   const [annualExpenses, setAnnualExpenses] = useState(0)
   const [currentInvestments, setCurrentInvestments] = useState(0)
   const [monthlyContribution, setMonthlyContribution] = useState(0)
@@ -21,37 +25,20 @@ export function FireCalculator() {
       <h2 className="text-lg font-semibold mb-4">FIRE Calculator</h2>
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label>Annual Expenses (AED)</label>
-          <input
-            type="number"
-            value={annualExpenses || ''}
-            onChange={(e) => setAnnualExpenses(parseFloat(e.target.value) || 0)}
-          />
+          <label>Annual Expenses ({dc})</label>
+          <NumberInput value={annualExpenses} onChange={setAnnualExpenses} />
         </div>
         <div>
-          <label>Current Investments (AED)</label>
-          <input
-            type="number"
-            value={currentInvestments || ''}
-            onChange={(e) => setCurrentInvestments(parseFloat(e.target.value) || 0)}
-          />
+          <label>Current Investments ({dc})</label>
+          <NumberInput value={currentInvestments} onChange={setCurrentInvestments} />
         </div>
         <div>
-          <label>Monthly Contribution (AED)</label>
-          <input
-            type="number"
-            value={monthlyContribution || ''}
-            onChange={(e) => setMonthlyContribution(parseFloat(e.target.value) || 0)}
-          />
+          <label>Monthly Contribution ({dc})</label>
+          <NumberInput value={monthlyContribution} onChange={setMonthlyContribution} />
         </div>
         <div>
           <label>Expected Annual Return (%)</label>
-          <input
-            type="number"
-            step="0.1"
-            value={annualReturn || ''}
-            onChange={(e) => setAnnualReturn(parseFloat(e.target.value) || 0)}
-          />
+          <NumberInput value={annualReturn} onChange={setAnnualReturn} decimals={1} />
         </div>
       </div>
 
@@ -59,7 +46,7 @@ export function FireCalculator() {
         <div>
           <div className="text-sm text-stone-400">FIRE Number</div>
           <div className="text-lg font-bold font-mono text-emerald-400">
-            {formatCurrency(fireNumber, 'AED')}
+            {formatCurrency(fireNumber, dc)}
           </div>
           <div className="text-xs text-stone-500">25x annual expenses</div>
         </div>

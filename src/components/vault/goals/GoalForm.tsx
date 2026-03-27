@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { NumberInput } from '../../shared/NumberInput.tsx'
 import { Modal } from '../../shared/Modal.tsx'
 import { generateId } from '../../../utils/id.ts'
 import type { Goal, GoalCategory, Currency, SavingsPot } from '../../../types/vault.ts'
@@ -91,7 +92,7 @@ export function GoalForm({ open, goal, savingsPots, onClose, onSave }: GoalFormP
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label>Target Amount</label>
-            <input type="number" value={form.targetAmount || ''} onChange={(e) => setForm((f) => ({ ...f, targetAmount: parseFloat(e.target.value) || 0 }))} />
+            <NumberInput value={form.targetAmount} onChange={(v) => setForm((f) => ({ ...f, targetAmount: v }))} />
           </div>
           <div>
             <label>Target Date</label>

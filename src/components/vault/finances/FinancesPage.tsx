@@ -3,6 +3,7 @@ import { Card } from '../../shared/Card.tsx'
 import { formatCurrency, toAED, formatInDisplayCurrency } from '../../../utils/currency.ts'
 import { calcPersonMonthlySurplus, calcPersonMonthlyOutgoings } from '../../../utils/calculations.ts'
 import { PersonHeader, PersonIncome, PersonExpenses, PersonVariableSpend } from './PersonColumn.tsx'
+import { NumberInput } from '../../shared/NumberInput.tsx'
 import type { Person, SavingsPot, PotContribution, Currency } from '../../../types/vault.ts'
 
 function ContributionsColumn({ person, savingsPots, onChange, displayCurrency }: { person: Person; savingsPots: SavingsPot[]; onChange: (p: Person) => void; displayCurrency: Currency }) {
@@ -44,11 +45,10 @@ function ContributionsColumn({ person, savingsPots, onChange, displayCurrency }:
                 <option key={pot.id} value={pot.id}>{pot.label}</option>
               ))}
             </select>
-            <input
+            <NumberInput
               className="w-24"
-              type="number"
-              value={contrib.amount || ''}
-              onChange={(e) => updateContribution(i, { ...contrib, amount: parseFloat(e.target.value) || 0 })}
+              value={contrib.amount}
+              onChange={(v) => updateContribution(i, { ...contrib, amount: v })}
             />
             <button onClick={() => removeContribution(i)} className="text-stone-500 hover:text-rose-400 px-1">
               &times;
