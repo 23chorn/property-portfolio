@@ -1,0 +1,52 @@
+export const DEFAULT_PROPERTY = {
+  id: 'prop_1',
+  meta: {
+    name: '17 Glasgow Street',
+    address: 'NN5 5BN, Northampton',
+    type: 'mid-terrace',
+    bedrooms: 3,
+    sqm: 107,
+    epcRating: 'E',
+    purchaseDate: '2021-09',
+    purchasePrice: 230000,
+    currentEstimatedValue: 265000,
+  },
+  mortgage: {
+    balance: 167000,
+    type: 'interest-only',
+    currentRate: 4.7,
+    renewalYear: 2026,
+  },
+  rental: {
+    monthlyRent: 1300,
+    targetRent: 1300,
+    rentGrowthRate: 2.5,
+    voidMonthsPerYear: 1,
+  },
+  costs: {
+    managementFeePercent: 12,
+    tenantFindFeeAnnualised: 675,
+    complianceAnnual: 500,
+    insuranceAnnual: 715,
+    maintenancePercent: 1.5,
+    epcUpgradeCost: 8000,
+    epcUpgradeYear: 4,
+    additionalCosts: [
+      { label: 'Front wall repair', amount: 1000, year: 2023 },
+    ],
+  },
+  tax: {
+    ownerIsUKCitizen: true,
+    residenceCountry: 'UAE',
+    claimsPersonalAllowance: true,
+    personalAllowance: 12570,
+    taxRate: 20,
+    nrlsRegistered: false,
+  },
+  projections: {
+    houseGrowthRate: 3.7,
+    mortgageClearYear: 20,
+    phase2Years: 10,
+    cgtRate: 24,
+  },
+}

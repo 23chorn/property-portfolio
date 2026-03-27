@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  /* Deep charcoal base with subtle warm undertone */
+  --color-bg-primary: #09090b;
+  --color-bg-surface: #12141a;
+  --color-bg-elevated: #1a1d27;
+  --color-border: rgba(255, 255, 255, 0.06);
+
+  /* Crisp text hierarchy */
+  --color-text-primary: #eef0f6;
+  --color-text-secondary: #8b8fa7;
+  --color-text-muted: #4e5266;
+
+  /* Vibrant accents — richer, more saturated, distinct from stock Tailwind */
+  --color-accent-green: #00e59b;     /* bright mint — profit / positive */
+  --color-accent-red: #ff4d6a;       /* hot coral — loss / negative */
+  --color-accent-amber: #ffb224;     /* warm gold — warnings / neutral data */
+  --color-accent-blue: #3ea8ff;      /* vivid sky — primary actions / info */
+  --color-accent-purple: #a78bfa;    /* soft violet — projections / phase 2 */
+}
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  margin: 0;
+  min-height: 100vh;
+}
+
+.font-mono {
+  font-family: 'DM Mono', monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-elevated);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #282c3a;
+}
+
+/* Custom range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 4px;
+  background: var(--color-bg-elevated);
+  border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent-blue);
+  margin-top: -6px;
+  border: 2px solid var(--color-bg-primary);
+  box-shadow: 0 0 8px rgba(62, 168, 255, 0.35);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: var(--color-bg-elevated);
+  border-radius: 2px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-accent-blue);
+  border: 2px solid var(--color-bg-primary);
+  box-shadow: 0 0 8px rgba(62, 168, 255, 0.35);
+}
+
+/* Number input hide spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
