@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { usePropertyStore } from './store/usePropertyStore'
+import PinEntry from './components/PinEntry'
 import Sidebar from './components/layout/Sidebar'
 import Header from './components/layout/Header'
 import PropertyOverview from './components/property/PropertyOverview'
@@ -12,8 +13,13 @@ import SellVsHold from './components/property/SellVsHold'
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('overview')
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem('pp-auth') === '1')
   const store = usePropertyStore()
   const { activeProperty, updateField, resetSection, loading, saveStatus } = store
+
+  if (!authed) {
+    return <PinEntry onSuccess={() => setAuthed(true)} />
+  }
 
   if (loading) {
     return (

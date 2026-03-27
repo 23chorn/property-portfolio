@@ -5,13 +5,13 @@ import { calcMonthlyMortgage, calcAnnualCosts, calcSection24Tax } from '../../ut
 
 function Row({ label, monthly, annual, indent = false, bold = false, color }) {
   const textClass = color === 'green' ? 'text-accent-green' : color === 'red' ? 'text-accent-red' : 'text-text-primary'
-  const labelClass = indent ? 'pl-4 text-text-secondary' : bold ? 'font-semibold text-text-primary' : 'text-text-secondary'
+  const labelClass = indent ? 'pl-2 sm:pl-4 text-text-secondary' : bold ? 'font-semibold text-text-primary' : 'text-text-secondary'
 
   return (
     <tr className="border-b border-border/50">
       <td className={`py-2 sm:py-2.5 text-xs sm:text-sm ${labelClass}`}>{label}</td>
-      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-right ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(monthly)}</td>
-      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-right ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(annual)}</td>
+      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-right pl-2 whitespace-nowrap ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(monthly)}</td>
+      <td className={`py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-right pl-2 whitespace-nowrap ${bold ? 'font-medium' : ''} ${textClass}`}>{formatCurrency(annual)}</td>
     </tr>
   )
 }
@@ -62,7 +62,7 @@ export default function CostBreakdown({ property }) {
       )}
 
       <div className="bg-bg-surface border border-border rounded-xl p-4 sm:p-6 overflow-x-auto">
-        <table className="w-full min-w-[400px]">
+        <table className="w-full">
           <thead>
             <tr className="border-b border-border">
               <th className="text-left text-xs text-text-muted uppercase tracking-wider py-2">Item</th>
