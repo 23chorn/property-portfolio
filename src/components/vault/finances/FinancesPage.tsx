@@ -260,11 +260,11 @@ export function FinancesPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <div className="text-sm text-stone-500 mb-2">{p1.name}</div>
-            <ContributionsColumn person={p1} savingsPots={state.savingsPots} onChange={updatePerson('person1')} displayCurrency={dc} />
+            <ContributionsColumn person={p1} savingsPots={state.savingsPots} onChange={updatePerson('person1')} displayCurrency={dc} rates={rates} />
           </div>
           <div>
             <div className="text-sm text-stone-500 mb-2">{p2.name}</div>
-            <ContributionsColumn person={p2} savingsPots={state.savingsPots} onChange={updatePerson('person2')} displayCurrency={dc} />
+            <ContributionsColumn person={p2} savingsPots={state.savingsPots} onChange={updatePerson('person2')} displayCurrency={dc} rates={rates} />
           </div>
         </div>
       </Card>
